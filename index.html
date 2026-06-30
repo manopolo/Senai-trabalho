@@ -1,138 +1,60 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAEPSaúde</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-    <div class="perfil-container">
-        <div class="perfil-info">
-            <img src="SAEPSaude.png" alt="Logo SAEPSaúde" onerror="this.src='https://via.placeholder.com/100'">
-            <h2>SAEPSaúde</h2>
-            <div class="estatisticas">
-                <div>
-                    <strong id="qtd-atividades">3</strong><br>
-                    <small>Qtd. Atividades</small>
-                </div>
-                <div>
-                    <strong id="qtd-calorias">100</strong><br>
-                    <small>Qtd. Calorias</small>
-                </div>
-            </div>
-        </div>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        <button class="btn-atividade" onclick="abrirModal('modalNovaAtividade')">Nova Atividade</button>
+body {
+    font-family: 'Inter', sans-serif;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    height: 100vh;
+    background-color: #F5F5F5;
+    overflow: hidden;
+}
 
-        <div class="rodape">
-            <p>SAEPSaúde</p>
-            <p>&copy; Copyright 2024</p>
-        </div>
-    </div>
+/* --- PERFIL --- */
+.perfil-container { background-color: #333333; color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; }
+.perfil-info { text-align: center; padding: 0 20px; }
+.perfil-info img { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px; border: 2px solid #FFFFFF; }
+.estatisticas { display: flex; justify-content: space-around; margin-top: 20px; }
+.btn-atividade { width: 100%; padding: 15px; background-color: #483DAD; color: #FFFFFF; border: none; border-top: 1px solid #FFFFFF; border-bottom: 1px solid #FFFFFF; cursor: pointer; font-weight: bold; font-size: 16px; }
+.rodape { text-align: center; font-size: 12px; color: #CCCCCC; padding: 0 20px; }
 
-    <div class="main-container">
-        <div class="cabecalho-main">
-            <button class="btn-login" onclick="abrirModal('modalLogin')">Login</button>
-        </div>
+/* --- MAIN --- */
+.main-container { padding: 30px; display: flex; flex-direction: column; overflow-y: auto; }
+.cabecalho-main { display: flex; justify-content: flex-end; margin-bottom: 25px; }
+.btn-login { background-color: #FFFFFF; color: #333333; border: 1px solid #CCCCCC; padding: 10px 25px; cursor: pointer; font-weight: bold; border-radius: 5px; }
+.filtros { background-color: #333333; color: #FFFFFF; display: flex; justify-content: space-around; padding: 15px; margin-bottom: 25px; border-radius: 6px; font-weight: 600; }
 
-        <div class="filtros">
-            <span>Corrida</span>
-            <span>Caminhada</span>
-            <span>Trilha</span>
-        </div>
+/* --- ATIVIDADES --- */
+.atividade-card { background-color: #FFFFFF; border: 1px solid #DDDDDD; padding: 20px; margin-bottom: 15px; border-radius: 6px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.info-principal { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.like-btn { background: none; border: none; cursor: pointer; font-size: 16px; margin-left: 10px; color: #333333; display: inline-flex; align-items: center; gap: 5px; }
+.like-ativo { color: #FF0000 !important; }
 
-        <div id="area-atividades">
-            <div class="atividade-card">
-                <div class="info-principal">
-                    <div>
-                        <strong>Corrida</strong><br>
-                        <small>18:30-12/08/24</small>
-                    </div>
-                    <div>
-                        <strong>Usuário_01</strong><br>
-                        10 km Distância
-                    </div>
-                    <div>50 min Duração</div>
-                    <div>350 Calorias</div>
-                    <div>
-                        <button class="like-btn" onclick="darLike(this)">🤍 <span class="contador">4</span></button>
-                        <button class="like-btn" onclick="abrirComentario(this)">💬 <span class="contador">4</span></button>
-                    </div>
-                </div>
-                <div class="area-comentario" style="display: none;">
-                    <input type="text" class="input-comentario" placeholder="Escrever comentário...">
-                    <button class="btn-enviar-comentario" onclick="enviarComentario(this)">Enviar</button>
-                    <span class="erro-texto erro-comentario">não é possível enviar um comentário vazio</span>
-                </div>
-            </div>
-        </div>
+/* --- COMENTÁRIOS --- */
+.area-comentario { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+.input-comentario { padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; font-family: 'Inter', sans-serif; }
+.btn-enviar-comentario { background-color: #333333; color: #FFFFFF; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; align-self: flex-end; }
 
-        <div class="paginacao">
-            <button class="btn-pag" disabled>Anterior</button>
-            <button class="btn-pag ativo">1</button>
-            <button class="btn-pag">2</button>
-            <button class="btn-pag">3</button>
-            <button class="btn-pag">Próximo</button>
-        </div>
-    </div>
+/* --- PAGINAÇÃO --- */
+.paginacao { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+.btn-pag { padding: 8px 12px; border: 1px solid #ccc; background-color: #FFFFFF; color: #333333; cursor: pointer; border-radius: 4px; font-family: 'Inter', sans-serif; }
+.btn-pag.ativo { background-color: #483DAD; color: #FFFFFF; border: none; }
+.btn-pag:disabled { background-color: #e0e0e0; cursor: not-allowed; }
 
-    <div id="modalNovaAtividade" class="modal">
-        <div class="modal-content">
-            <h3>Crie sua atividade</h3>
-            
-            <label>Tipo da atividade</label>
-            <select id="inputTipo">
-                <option value="">Ex: Caminhada</option>
-                <option value="corrida">Corrida</option>
-                <option value="caminhada">Caminhada</option>
-                <option value="trilha">Trilha</option>
-            </select>
-            <span id="erro-inputTipo" class="erro-texto">Campo obrigatório</span>
+/* --- MODAIS GERAIS --- */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background-color: #FFFFFF; padding: 30px; border-radius: 8px; width: 400px; display: flex; flex-direction: column; gap: 10px; }
+.modal-content input, .modal-content select { padding: 12px; border: 1px solid #CCCCCC; border-radius: 5px; width: 100%; }
+.modal-content label { font-size: 14px; font-weight: 600; color: #333333; margin-top: 5px; }
+.btn-salvar { background-color: #333333; color: #FFFFFF; border: none; padding: 14px; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 10px; }
+.btn-fechar { background: transparent; color: #666666; border: none; text-align: center; cursor: pointer; text-decoration: underline; }
+.btn-fechar-x { background: transparent; border: none; font-size: 18px; cursor: pointer; font-weight: bold; }
 
-            <label>Distância percorrida</label>
-            <input type="number" id="inputDistancia" placeholder="Ex: 1000 metros">
-            <span id="erro-inputDistancia" class="erro-texto">Campo obrigatório</span>
+/* --- BOTÕES DO MODAL LOGIN --- */
+.btn-modal-login { background-color: #333333; color: #FFFFFF; border: none; padding: 12px; cursor: pointer; border-radius: 5px; flex: 1; font-weight: bold; }
+.btn-modal-cancelar { background-color: transparent; color: #333333; border: 1px solid #333333; padding: 12px; cursor: pointer; border-radius: 5px; flex: 1; font-weight: bold; }
 
-            <label>Duração da atividade</label>
-            <input type="number" id="inputDuracao" placeholder="Ex: 120 min">
-            <span id="erro-inputDuracao" class="erro-texto">Campo obrigatório</span>
-
-            <label>Quantidade de Calorias</label>
-            <input type="number" id="inputCalorias" placeholder="Ex: 300">
-            <span id="erro-inputCalorias" class="erro-texto">Campo obrigatório</span>
-
-            <button class="btn-salvar" onclick="salvarAtividade(event)">Criar Atividade</button>
-            <button class="btn-fechar" onclick="fecharModal('modalNovaAtividade')">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="modalLogin" class="modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>Login</h3>
-                <button class="btn-fechar-x" onclick="fecharModal('modalLogin')">X</button>
-            </div>
-            
-            <label>Email</label>
-            <input type="email" id="loginEmail" placeholder="Insira o seu email">
-            <span id="erro-loginEmail" class="erro-texto">email ou senha obrigatório</span>
-
-            <label>Senha</label>
-            <input type="password" id="loginSenha" placeholder="Insira a sua senha">
-            <span id="erro-loginSenha" class="erro-texto">email ou senha obrigatório</span>
-
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn-modal-login" onclick="validarLogin(event)">Login</button>
-                <button class="btn-modal-cancelar" onclick="fecharModal('modalLogin')">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
-
-
-    
+/* --- ERROS --- */
+.erro-input { border: 2px solid #FF0000 !important; }
+.erro-texto { color: #FF0000; font-size: 12px; font-weight: 600; display: none; margin-top: -5px; }
