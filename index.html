@@ -1,27 +1,360 @@
- -- Criar a Base de Dados
-CREATE DATABASE saep_saude;
-USE saep_saude;
 
--- Tabela de Utilizadores (Clientes e Funcionários)
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    foto_perfil VARCHAR(255)
-);
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAEPSaúde</title>
+    <style>
+        /* Regra: Utilizar a fonte Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
--- Tabela de Atividades
-CREATE TABLE atividades (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    tipo ENUM('corrida', 'caminhada', 'trilha') NOT NULL, -- Aceita apenas estes valores conforme a regra 3.1
-    distancia_metros INT NOT NULL, -- Valores em metros
-    duracao_minutos INT NOT NULL, -- Valores em minutos
-    calorias INT NOT NULL,
-    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    curtidas INT DEFAULT 0,
-    comentarios INT DEFAULT 0,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-);
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: grid;
+            grid-template-columns: 250px 1fr; /* Coluna 1 (Perfil) e Coluna 2 (Main) */
+            height: 100vh;
+            background-color: #F5F5F5;
+        }
+
+        /* --- PRIMEIRA COLUNA (PERFIL) --- */
+        .perfil-container {
+            background-color: #333333; /* Fundo pedido */
+            color: #FFFFFF; /* Fonte pedida */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .perfil-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .perfil-info img {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .estatisticas {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .btn-atividade {
+            width: 100%;
+            padding: 15px;
+            background-color: #483DAD; /* Cor pedida para o botão ativo */
+            color: #FFFFFF;
+            border: none;
+            border-top: 1px solid #FFFFFF;
+            border-bottom: 1px solid #FFFFFF;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-atividade:hover {
+            background-color: #3a318a;
+        }
+
+        .rodape {
+            text-align: center;
+            padding: 10px;
+            background-color: #333333;
+            color: #FFFFFF;
+            font-size: 12px;
+        }
+
+        /* --- SEGUNDA COLUNA (MAIN) --- */
+        .main-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Permite scroll se houver muitas atividades */
+        }
+
+        .cabecalho-main {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .btn-login {
+            background-color: #FFFFFF;
+            color: #333333;
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .filtros {
+            background-color: #333333;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* --- CARTÃO DE ATIVIDADE --- */
+        .atividade-card {
+            background-color: #FFFFFF;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        /* --- MODAIS (Janelas sobrepostas) --- */
+        .modal {
+            display: none; /* Fica escondido por defeito */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            padding: 25px;
+            border-radius: 8px;
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-content h3 { margin: 0; color: #333333; text-align: center; }
+
+        .modal-content input, .modal-content select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-salvar {
+            background-color: #483DAD; 
+            color: #FFFFFF;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-fechar {
+            background-color: transparent;
+            color: #333333;
+            border: none;
+            text-align: right;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* --- REGRAS DE ERRO (Requisito 5.1 da Prova) --- */
+        .erro-input {
+            border: 2px solid #FF0000 !important; /* Borda vermelha se faltar dado */
+        }
+
+        .erro-texto {
+            color: #FF0000;
+            font-size: 12px;
+            display: none; /* Só aparece quando há erro */
+            margin-top: -10px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="perfil-container">
+        <div class="perfil-info">
+            <img src="SAEPSaude.png" alt="Logo SAEPSaúde" onerror="this.src='https://via.placeholder.com/100'">
+            <h2>SAEPSaúde</h2>
+            <div class="estatisticas">
+                <div>
+                    <strong>3</strong><br>
+                    <small>Qtd. Atividades</small>
+                </div>
+                <div>
+                    <strong>100</strong><br>
+                    <small>Qtd. Calorias</small>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-atividade" onclick="abrirModal('modalNovaAtividade')">Nova Atividade</button>
+
+        <div class="rodape">
+            <p>SAEPSaúde</p>
+            <p>&copy; Copyright 2024</p>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="cabecalho-main">
+            <button class="btn-login">Login</button>
+        </div>
+
+        <div class="filtros">
+            <span>Corrida</span>
+            <span>Caminhada</span>
+            <span>Trilha</span>
+        </div>
+
+        <div id="area-atividades">
+            <div class="atividade-card">
+                <div>
+                    <strong>Corrida</strong><br>
+                    <small>18:30 - 12/08/2024</small>
+                </div>
+                <div>
+                    <strong>Usuário_01</strong><br>
+                    10.00 km Distância
+                </div>
+                <div>0.83 h Duração</div>
+                <div>350 Calorias</div>
+                <div>
+                    <button class="like-btn">🤍 4</button>
+                    <button class="like-btn">💬 4</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalNovaAtividade" class="modal">
+        <div class="modal-content">
+            <h3>Nova Atividade</h3>
+            
+            <select id="inputTipo">
+                <option value="">Selecione o tipo...</option>
+                <option value="corrida">Corrida</option>
+                <option value="caminhada">Caminhada</option>
+                <option value="trilha">Trilha</option>
+            </select>
+            <span id="erro-inputTipo" class="erro-texto">Campo obrigatório</span>
+
+            <input type="number" id="inputDistancia" placeholder="Distância (metros)">
+            <span id="erro-inputDistancia" class="erro-texto">Campo obrigatório</span>
+
+            <input type="number" id="inputDuracao" placeholder="Duração (minutos)">
+            <span id="erro-inputDuracao" class="erro-texto">Campo obrigatório</span>
+
+            <input type="number" id="inputCalorias" placeholder="Calorias">
+            <span id="erro-inputCalorias" class="erro-texto">Campo obrigatório</span>
+
+            <button class="btn-salvar" onclick="salvarAtividade(event)">Criar Atividade</button>
+            <button class="btn-fechar" onclick="fecharModal('modalNovaAtividade')">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        // Funções para abrir e fechar modais
+        function abrirModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function fecharModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // Requisito 6.2 e 6.3 - Converter Metros para Km e Minutos para Horas
+        function converterDados(metros, minutos) {
+            const km = (metros / 1000).toFixed(2);
+            const horas = (minutos / 60).toFixed(2);
+            return { km, horas };
+        }
+
+        // Lógica ao clicar no botão "Criar Atividade"
+        function salvarAtividade(event) {
+            event.preventDefault(); 
+
+            const tipo = document.getElementById('inputTipo');
+            const distancia = document.getElementById('inputDistancia');
+            const duracao = document.getElementById('inputDuracao');
+            const calorias = document.getElementById('inputCalorias');
+
+            const campos = [tipo, distancia, duracao, calorias];
+            let formValido = true;
+
+            // Requisito 5.1 - Validação de campos vazios (Borda vermelha)
+            campos.forEach(campo => {
+                const spanErro = document.getElementById('erro-' + campo.id);
+                
+                if (campo.value.trim() === '') {
+                    campo.classList.add('erro-input');
+                    if (spanErro) spanErro.style.display = 'block'; 
+                    formValido = false;
+                } else {
+                    campo.classList.remove('erro-input');
+                    if (spanErro) spanErro.style.display = 'none';
+                }
+            });
+
+            // Requisito 5.2 e 5.3 - Salvar e adicionar ao topo
+            if (formValido) {
+                const dadosConvertidos = converterDados(distancia.value, duracao.value);
+
+                const novoCartao = document.createElement('div');
+                novoCartao.className = 'atividade-card';
+                
+                const dataAtual = new Date().toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' });
+
+                // Capitalizar a primeira letra do tipo
+                const tipoFormatado = tipo.value.charAt(0).toUpperCase() + tipo.value.slice(1);
+
+                novoCartao.innerHTML = `
+                    <div>
+                        <strong>${tipoFormatado}</strong><br>
+                        <small>${dataAtual}</small>
+                    </div>
+                    <div>
+                        <strong>Novo Utilizador</strong><br>
+                        ${dadosConvertidos.km} km Distância
+                    </div>
+                    <div>${dadosConvertidos.horas} h Duração</div>
+                    <div>${calorias.value} Calorias</div>
+                    <div>
+                        <button class="like-btn">🤍 0</button>
+                        <button class="like-btn">💬 0</button>
+                    </div>
+                `;
+
+                // Coloca o novo cartão no topo da área de atividades
+                const areaAtividades = document.getElementById('area-atividades');
+                areaAtividades.prepend(novoCartao);
+
+                // Limpar campos e fechar
+                campos.forEach(campo => campo.value = '');
+                fecharModal('modalNovaAtividade');
+            }
+        }
+    </script>
+</body>
+</html>
 
