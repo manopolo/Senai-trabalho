@@ -1,5 +1,138 @@
-// Substitui a linha antiga da data por esta:
-const agora = new Date();
-const data = `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}/${String(agora.getMonth() + 1).padStart(2, '0')}/${String(agora.getFullYear()).slice(-2)}`;
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAEPSaúde</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="perfil-container">
+        <div class="perfil-info">
+            <img src="SAEPSaude.png" alt="Logo SAEPSaúde" onerror="this.src='https://via.placeholder.com/100'">
+            <h2>SAEPSaúde</h2>
+            <div class="estatisticas">
+                <div>
+                    <strong id="qtd-atividades">3</strong><br>
+                    <small>Qtd. Atividades</small>
+                </div>
+                <div>
+                    <strong id="qtd-calorias">100</strong><br>
+                    <small>Qtd. Calorias</small>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-atividade" onclick="abrirModal('modalNovaAtividade')">Nova Atividade</button>
+
+        <div class="rodape">
+            <p>SAEPSaúde</p>
+            <p>&copy; Copyright 2024</p>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="cabecalho-main">
+            <button class="btn-login" onclick="abrirModal('modalLogin')">Login</button>
+        </div>
+
+        <div class="filtros">
+            <span>Corrida</span>
+            <span>Caminhada</span>
+            <span>Trilha</span>
+        </div>
+
+        <div id="area-atividades">
+            <div class="atividade-card">
+                <div class="info-principal">
+                    <div>
+                        <strong>Corrida</strong><br>
+                        <small>18:30-12/08/24</small>
+                    </div>
+                    <div>
+                        <strong>Usuário_01</strong><br>
+                        10 km Distância
+                    </div>
+                    <div>50 min Duração</div>
+                    <div>350 Calorias</div>
+                    <div>
+                        <button class="like-btn" onclick="darLike(this)">🤍 <span class="contador">4</span></button>
+                        <button class="like-btn" onclick="abrirComentario(this)">💬 <span class="contador">4</span></button>
+                    </div>
+                </div>
+                <div class="area-comentario" style="display: none;">
+                    <input type="text" class="input-comentario" placeholder="Escrever comentário...">
+                    <button class="btn-enviar-comentario" onclick="enviarComentario(this)">Enviar</button>
+                    <span class="erro-texto erro-comentario">não é possível enviar um comentário vazio</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="paginacao">
+            <button class="btn-pag" disabled>Anterior</button>
+            <button class="btn-pag ativo">1</button>
+            <button class="btn-pag">2</button>
+            <button class="btn-pag">3</button>
+            <button class="btn-pag">Próximo</button>
+        </div>
+    </div>
+
+    <div id="modalNovaAtividade" class="modal">
+        <div class="modal-content">
+            <h3>Crie sua atividade</h3>
+            
+            <label>Tipo da atividade</label>
+            <select id="inputTipo">
+                <option value="">Ex: Caminhada</option>
+                <option value="corrida">Corrida</option>
+                <option value="caminhada">Caminhada</option>
+                <option value="trilha">Trilha</option>
+            </select>
+            <span id="erro-inputTipo" class="erro-texto">Campo obrigatório</span>
+
+            <label>Distância percorrida</label>
+            <input type="number" id="inputDistancia" placeholder="Ex: 1000 metros">
+            <span id="erro-inputDistancia" class="erro-texto">Campo obrigatório</span>
+
+            <label>Duração da atividade</label>
+            <input type="number" id="inputDuracao" placeholder="Ex: 120 min">
+            <span id="erro-inputDuracao" class="erro-texto">Campo obrigatório</span>
+
+            <label>Quantidade de Calorias</label>
+            <input type="number" id="inputCalorias" placeholder="Ex: 300">
+            <span id="erro-inputCalorias" class="erro-texto">Campo obrigatório</span>
+
+            <button class="btn-salvar" onclick="salvarAtividade(event)">Criar Atividade</button>
+            <button class="btn-fechar" onclick="fecharModal('modalNovaAtividade')">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalLogin" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Login</h3>
+                <button class="btn-fechar-x" onclick="fecharModal('modalLogin')">X</button>
+            </div>
+            
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Insira o seu email">
+            <span id="erro-loginEmail" class="erro-texto">email ou senha obrigatório</span>
+
+            <label>Senha</label>
+            <input type="password" id="loginSenha" placeholder="Insira a sua senha">
+            <span id="erro-loginSenha" class="erro-texto">email ou senha obrigatório</span>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn-modal-login" onclick="validarLogin(event)">Login</button>
+                <button class="btn-modal-cancelar" onclick="fecharModal('modalLogin')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
 
     
