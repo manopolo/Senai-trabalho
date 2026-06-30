@@ -1,69 +1,180 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>GameZone | Seu Portal Gamer</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SAEPSaúde</title>
+    <style>
+        /* Regra: Utilizar a fonte Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: grid;
+            grid-template-columns: 250px 1fr; /* Coluna 1 (Perfil) e Coluna 2 (Main) */
+            height: 100vh;
+            background-color: #F5F5F5;
+        }
+
+        /* --- PRIMEIRA COLUNA (PERFIL) --- */
+        .perfil-container {
+            background-color: #333333; /* Fundo pedido */
+            color: #FFFFFF; /* Fonte pedida */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .perfil-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .perfil-info img {
+            width: 100px;
+            border-radius: 50%;
+        }
+
+        .btn-atividade {
+            width: 100%;
+            padding: 15px;
+            background-color: transparent;
+            color: #FFFFFF;
+            border-top: 1px solid #FFFFFF;
+            border-bottom: 1px solid #FFFFFF;
+            border-left: none;
+            border-right: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Botão quando ativo/logado (cor 483DAD exigida no caderno) */
+        .btn-atividade.ativo {
+            background-color: #483DAD;
+        }
+
+        .rodape {
+            text-align: center;
+            padding: 10px;
+            background-color: #333333;
+            color: #FFFFFF;
+            font-size: 12px;
+        }
+
+        /* --- SEGUNDA COLUNA (MAIN) --- */
+        .main-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cabecalho-main {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .btn-login {
+            background-color: #FFFFFF;
+            color: #333333;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .filtros {
+            background-color: #333333;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        /* --- CARTÃO DE ATIVIDADE --- */
+        .atividade-card {
+            background-color: #FFFFFF;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        /* Coração vermelho se houver like do utilizador */
+        .like-ativo {
+            color: #FF0000; 
+        }
+
+    </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">ZonaGamer</div>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#midia">Novidades</a></li>
-                <li><a href="#cadastro">Cadastre-se</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <h1>O Universo dos Games em um só lugar</h1>
-                <p>Fique por dentro dos principais lançamentos, reviews e campeonatos de eSports do momento.</p>
-                <button id="btn-contato">Contatos</button>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80" alt="Controle de videogame com luzes LED">
-            </div>
-        </section>
-
-        <section id="midia" class="video-container">
-            <iframe width="560" height="315"
-                src="https://www.youtube.com/embed/1CayTwMbiW0"
-                title="Trailer do Jogo"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-            </iframe>
-        </section>
-
-        <section id="cadastro" class="form-section">
-            <h2>Entre para a Guilda</h2>
-            <p>Receba newsletters exclusivas com códigos de desconto, notícias e acessos a betas fechados.</p>
-
-            <form id="form-cadastro">
-                <div class="form-group">
-                    <label for="nome">Nome completo:</label>
-                    <input type="text" id="nome" required placeholder="Digite seu nome">
+    <div class="perfil-container">
+        <div class="perfil-info">
+            <img src="SAEPSaude.png" alt="Logo SAEPSaúde">
+            <h2>SAEPSaúde</h2>
+            <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+                <div>
+                    <strong>3</strong><br>
+                    <small>Qtd. Atividades</small>
                 </div>
-                <div class="form-group">
-                    <label for="email">E-mail válido:</label>
-                    <input type="email" id="email" required placeholder="Seu melhor e-mail">
+                <div>
+                    <strong>100</strong><br>
+                    <small>Qtd. Calorias</small>
                 </div>
-                <button type="submit" class="btn-submit">Inscrever-se</button>
-            </form>
-        </section>
-    </main>
+            </div>
+        </div>
 
-    <footer>
-        <p>&copy; 2026 GameZone. Todos os direitos reservados. Desenvolvido para fins acadêmicos.</p>
-    </footer>
+        <button class="btn-atividade" disabled>Atividade</button>
 
-    <script src="script.js"></script>
+        <div class="rodape">
+            <p>SAEPSaúde</p>
+            <p>Copyright-2024</p>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="cabecalho-main">
+            <button class="btn-login" onclick="abrirModal()">Login</button>
+        </div>
+
+        <div class="filtros">
+            <span>Corrida</span>
+            <span>Caminhada</span>
+            <span>Trilha</span>
+        </div>
+
+        <div class="atividade-card">
+            <div>
+                <strong>Corrida</strong><br>
+                <small>18:30 - 12/08/2024</small>
+            </div>
+            <div>
+                <strong>Usuário_01</strong><br>
+                10 km Distância
+            </div>
+            <div>50 min Duração</div>
+            <div>350 Calorias</div>
+            <div>
+                <button class="like-btn">🤍 4</button>
+                <button class="like-btn">💬 4</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
