@@ -357,4 +357,89 @@
     </script>
 </body>
 </html>
+Java script
+// Funções para abrir e fechar as janelas modais
+function abrirModal(id) {
+    document.getElementById(id).style.display = 'flex';
+}
+
+function fecharModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+// Requisito 6.2 e 6.3 - Converter Metros para Km e Minutos para Horas
+function converterDados(metros, minutos) {
+    const km = (metros / 1000).toFixed(2);
+    const horas = (minutos / 60).toFixed(2);
+    return { km, horas };
+}
+
+// Lógica ao clicar no botão "Criar Atividade"
+function salvarAtividade(event) {
+    event.preventDefault(); // Impede a página de recarregar
+
+    // Pega nos campos do formulário
+    const tipo = document.getElementById('inputTipo');
+    const distancia = document.getElementById('inputDistancia');
+    const duracao = document.getElementById('inputDuracao');
+    const calorias = document.getElementById('inputCalorias');
+
+    const campos = [tipo, distancia, duracao, calorias];
+    let formValido = true;
+
+    // Requisito 5.1 - Validação de campos vazios
+    campos.forEach(campo => {
+        const spanErro = document.getElementById('erro-' + campo.id);
+        
+        if (campo.value.trim() === '') {
+            campo.classList.add('erro-input'); // Fica com borda vermelha
+            if (spanErro) spanErro.style.display = 'block'; // Mostra "Campo obrigatório"
+            formValido = false;
+        } else {
+            campo.classList.remove('erro-input');
+            if (spanErro) spanErro.style.display = 'none';
+        }
+    });
+
+    // Requisito 5.2 e 5.3 - Se estiver tudo preenchido, salva e adiciona ao topo
+    if (formValido) {
+        // Converte os valores
+        const dadosConvertidos = converterDados(distancia.value, duracao.value);
+
+        // Cria o HTML do novo cartão
+        const novoCartao = document.createElement('div');
+        novoCartao.className = 'atividade-card';
+        
+        // Pega a data e hora atual
+        const dataAtual = new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+
+        novoCartao.innerHTML = `
+            <div>
+                <strong>${tipo.value.charAt(0).toUpperCase() + tipo.value.slice(1)}</strong><br>
+                <small>${dataAtual}</small>
+            </div>
+            <div>
+                <strong>Novo Usuário</strong><br>
+                ${dadosConvertidos.km} km Distância
+            </div>
+            <div>${dadosConvertidos.horas} h Duração</div>
+            <div>${calorias.value} Calorias</div>
+            <div>
+                <button class="like-btn">🤍 0</button>
+                <button class="like-btn">💬 0</button>
+            </div>
+        `;
+
+        // Adiciona a atividade no topo da lista principal (main)
+        const areaAtividades = document.getElementById('area-atividades');
+        areaAtividades.prepend(novoCartao); // prepend coloca em primeiro lugar!
+
+        // Limpa o formulário e fecha o modal
+        campos.forEach(campo => campo.value = '');
+        fecharModal('modalNovaAtividade');
+        alert("Atividade salva com sucesso!");
+    }
+}
+
+
 
