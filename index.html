@@ -1,180 +1,27 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAEPSaúde</title>
-    <style>
-        /* Regra: Utilizar a fonte Inter */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+ -- Criar a Base de Dados
+CREATE DATABASE saep_saude;
+USE saep_saude;
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            display: grid;
-            grid-template-columns: 250px 1fr; /* Coluna 1 (Perfil) e Coluna 2 (Main) */
-            height: 100vh;
-            background-color: #F5F5F5;
-        }
+-- Tabela de Utilizadores (Clientes e Funcionários)
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    foto_perfil VARCHAR(255)
+);
 
-        /* --- PRIMEIRA COLUNA (PERFIL) --- */
-        .perfil-container {
-            background-color: #333333; /* Fundo pedido */
-            color: #FFFFFF; /* Fonte pedida */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+-- Tabela de Atividades
+CREATE TABLE atividades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo ENUM('corrida', 'caminhada', 'trilha') NOT NULL, -- Aceita apenas estes valores conforme a regra 3.1
+    distancia_metros INT NOT NULL, -- Valores em metros
+    duracao_minutos INT NOT NULL, -- Valores em minutos
+    calorias INT NOT NULL,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    curtidas INT DEFAULT 0,
+    comentarios INT DEFAULT 0,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
 
-        .perfil-info {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .perfil-info img {
-            width: 100px;
-            border-radius: 50%;
-        }
-
-        .btn-atividade {
-            width: 100%;
-            padding: 15px;
-            background-color: transparent;
-            color: #FFFFFF;
-            border-top: 1px solid #FFFFFF;
-            border-bottom: 1px solid #FFFFFF;
-            border-left: none;
-            border-right: none;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        /* Botão quando ativo/logado (cor 483DAD exigida no caderno) */
-        .btn-atividade.ativo {
-            background-color: #483DAD;
-        }
-
-        .rodape {
-            text-align: center;
-            padding: 10px;
-            background-color: #333333;
-            color: #FFFFFF;
-            font-size: 12px;
-        }
-
-        /* --- SEGUNDA COLUNA (MAIN) --- */
-        .main-container {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .cabecalho-main {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-
-        .btn-login {
-            background-color: #FFFFFF;
-            color: #333333;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        .filtros {
-            background-color: #333333;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-
-        /* --- CARTÃO DE ATIVIDADE --- */
-        .atividade-card {
-            background-color: #FFFFFF;
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .like-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        
-        /* Coração vermelho se houver like do utilizador */
-        .like-ativo {
-            color: #FF0000; 
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="perfil-container">
-        <div class="perfil-info">
-            <img src="SAEPSaude.png" alt="Logo SAEPSaúde">
-            <h2>SAEPSaúde</h2>
-            <div style="display: flex; justify-content: space-around; margin-top: 15px;">
-                <div>
-                    <strong>3</strong><br>
-                    <small>Qtd. Atividades</small>
-                </div>
-                <div>
-                    <strong>100</strong><br>
-                    <small>Qtd. Calorias</small>
-                </div>
-            </div>
-        </div>
-
-        <button class="btn-atividade" disabled>Atividade</button>
-
-        <div class="rodape">
-            <p>SAEPSaúde</p>
-            <p>Copyright-2024</p>
-        </div>
-    </div>
-
-    <div class="main-container">
-        <div class="cabecalho-main">
-            <button class="btn-login" onclick="abrirModal()">Login</button>
-        </div>
-
-        <div class="filtros">
-            <span>Corrida</span>
-            <span>Caminhada</span>
-            <span>Trilha</span>
-        </div>
-
-        <div class="atividade-card">
-            <div>
-                <strong>Corrida</strong><br>
-                <small>18:30 - 12/08/2024</small>
-            </div>
-            <div>
-                <strong>Usuário_01</strong><br>
-                10 km Distância
-            </div>
-            <div>50 min Duração</div>
-            <div>350 Calorias</div>
-            <div>
-                <button class="like-btn">🤍 4</button>
-                <button class="like-btn">💬 4</button>
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
